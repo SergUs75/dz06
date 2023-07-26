@@ -23,6 +23,7 @@ def move_file(file: Path, root_dir: Path, categorie: str) -> None:
         new_name = new_name.with_name(
             f"{new_name.stem}-{uuid.uuid4()}{file.suffix}")
     file.rename(new_name)
+    print(f'file moved to {target_dir}, new name: {new_name.stem}{file.suffix}')
 
 
 def get_categories(file: Path) -> str:
@@ -43,10 +44,10 @@ def sort_folder(path) -> None:
 def delete_empty_folders(folder: Path) -> None:
     for subfolder in folder.iterdir():
         if subfolder.is_dir():
-            if not any(subfolder.iterdir()):
-                subfolder.rmdir()
-            else:
-                delete_empty_folders(subfolder)
+            delete_empty_folders(subfolder)
+    if not any(folder.iterdir()):
+        print(f'delete folder: {folder}')
+        folder.rmdir()
 
 
 def unpack_archive(folder: Path) -> None:
@@ -59,6 +60,7 @@ def unpack_archive(folder: Path) -> None:
             target_dir.mkdir(exist_ok=True)
             shutil.unpack_archive(str(item), str(target_dir))
             item.unlink()
+            print(f'archive unpacked in: {target_dir}')
 
 
 def main():
